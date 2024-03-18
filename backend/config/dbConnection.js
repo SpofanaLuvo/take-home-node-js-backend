@@ -3,8 +3,8 @@ require("dotenv").config();
 
 
 const pool = new Pool({
-    port: process.env.DB_PORT,
-    user: process.env.DB_USER,
+    port: process.env.DB_PORT || "5432",
+    user: process.env.DB_USER || "postgres",
     password: process.env.DB_PASSWORD,
 });
 
