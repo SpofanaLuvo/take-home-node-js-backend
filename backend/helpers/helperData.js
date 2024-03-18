@@ -4,17 +4,17 @@ const insertInto = {
     users: (name, email, password, role) => {
         return `INSERT INTO users (name, email, password, role) VALUES ('${name}','${email}', '${password}', '${role}')`;
     },
-    cleaners: () => {
-        return `INSERT INTO cleaners (email, password, role) VALUES ('${email}', '${password}', '${role}') `;
+    cleaners: (name, email) => {
+        return `INSERT INTO cleaners (name, email) VALUES ('${name}','${email}') `;
     },
-    tasks: (description, status, assigned_to) => {
-        `INSERT INTO tasks (description, status, assigned_to) VALUES ('${description}', '${status}', '${assigned_to}');`;
+    tasks: (description, status) => {
+        return `INSERT INTO tasks (description, status) VALUES ('${description}', '${status}');`;
     },
     ratings: (cleaner_id, rating) => {
         return `INSERT INTO ratings (cleaner_id, rating) VALUES ('${cleaner_id}', '${rating}');`;
     },
     payments: (cleaner_id, task_id, amount, payment_date) => {
-        `INSERT INTO Payments (cleaner_id,task_id, amount, payment_date) VALUES ('${cleaner_id}','${task_id}','${amount}','${payment_date}');`;
+        return `INSERT INTO payments (cleaner_id,task_id, amount, payment_date) VALUES ('${cleaner_id}','${task_id}','${amount}','${payment_date}');`;
     },
 };
 
@@ -36,16 +36,17 @@ const selectFrom = {
     },
     ratings: "SELECT * FROM ratings;",
     paymentsForDay: (cleaner_id, day) => {
-        return `SELECT SUM(PaymentAmount) AS total_amount
+        return `SELECT SUM(amount) AS total_amount
                 FROM Payments
-                WHERE CleanerID = ${cleaner_id} AND DATE_TRUNC('day', Timestamp) = '${day}';`;
+                WHERE cleaner_id = ${cleaner_id} AND payment_date = '${day}';`;
     },
     paymentsForMonth: (cleaner_id, month) => {
         return `SELECT SUM(amount) AS total_amount
-                FROM payments
-                WHERE cleaner_id = ${cleaner_id} AND DATE_TRUNC('month', Timestamp) = '${month}';`;
+            FROM payments
+            WHERE cleaner_id = ${cleaner_id} 
+            AND EXTRACT(MONTH FROM payment_date) = EXTRACT(MONTH FROM '${month}'::DATE);`;
     },
     payments: "SELECT * FROM payments;",
 };
 
-module.exports = { createTables, populateTables, insertInto, selectFrom };
+module.exports = { insertInto, selectFrom };

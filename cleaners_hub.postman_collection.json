@@ -1,0 +1,311 @@
+{
+	"info": {
+		"_postman_id": "1b6783e0-6010-4ae4-b1c2-40d7b6312e01",
+		"name": "cleaners_hub",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "16973519"
+	},
+	"item": [
+		{
+			"name": "Get all cleaner ratings",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:3000/api/customer/ratings",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"customer",
+						"ratings"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get all available cleaners",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:3000/api/customer/",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"customer",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get specific rating of a user",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:3000/api/customer/ratings/5",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"customer",
+						"ratings",
+						"5"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "rate a cleaner",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"cleaner_id\":2,\r\n    \"rating\":5\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3000/api/customer/ratings/",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"customer",
+						"ratings",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Register user",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "name",
+							"value": "test",
+							"type": "text"
+						},
+						{
+							"key": "email",
+							"value": "testa",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "test",
+							"type": "text"
+						},
+						{
+							"key": "role",
+							"value": "cleaner",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "localhost:3000/api/users/",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"users",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "login",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\":\"test\",\r\n    \"password\":\"test\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3000/api/users/login",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"users",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "make payement",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"cleaner_id\":4,\r\n    \"task_id\":4,\r\n    \"amount\":500.00\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3000/api/customer/payment/4",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"customer",
+						"payment",
+						"4"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get pending tasks as a logged in user",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjExLCJpYXQiOjE3MTA3OTYzODYsImV4cCI6MTcxMzM4ODM4Nn0.SZ0h8DkbD5oytlTj0wJP2FdEfx-K5nhFtgDFyLdFk3I",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:3000/api/cleaners/tasks/pending/",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"cleaners",
+						"tasks",
+						"pending",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get completed tasks as a logged in user",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjExLCJpYXQiOjE3MTA3OTYzODYsImV4cCI6MTcxMzM4ODM4Nn0.SZ0h8DkbD5oytlTj0wJP2FdEfx-K5nhFtgDFyLdFk3I",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:3000/api/cleaners/tasks/completed/",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"cleaners",
+						"tasks",
+						"completed",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "localhost:3000/api/cleaners/totals",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjExLCJpYXQiOjE3MTA3OTgxNjMsImV4cCI6MTcxMzM5MDE2M30.MW4Pdbj9Kgap-Yb_Ac1rst5BTzErRFGY4d7LIP5b_D0",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"cleaner_id\":8,\r\n    \"date\":\"Mon Mar 18 2024\",\r\n    \"aggregationType\":\"month\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3000/api/cleaners/totals",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"cleaners",
+						"totals"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

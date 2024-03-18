@@ -55,9 +55,9 @@ const createTableScripts = {
         "CREATE TABLE IF NOT EXISTS cleaners (cleaner_id SERIAL PRIMARY KEY,name VARCHAR(255) NOT NULL, email VARCHAR(255) NOT NULL)",
     tasks: "CREATE TABLE IF NOT EXISTS tasks (task_id SERIAL PRIMARY KEY,description TEXT NOT NULL, status VARCHAR(20) DEFAULT 'pending' NOT NULL)",
     ratings:
-        "CREATE TABLE IF NOT EXISTS ratings (rating_id SERIAL PRIMARY KEY ,cleaner_id INT UNIQUE REFERENCES cleaners(cleaner_id), rating INT NOT NULL);",
+        "CREATE TABLE IF NOT EXISTS ratings (rating_id SERIAL PRIMARY KEY ,cleaner_id INT  REFERENCES cleaners(cleaner_id), rating INT NOT NULL);",
     payments:
-        "CREATE TABLE IF NOT EXISTS payments (payment_id SERIAL PRIMARY KEY ,cleaner_id INT UNIQUE REFERENCES cleaners(cleaner_id),task_id INT REFERENCES tasks(task_id), amount DECIMAL(10, 2) NOT NULL, payment_date DATE NOT NULL);",
+        "CREATE TABLE IF NOT EXISTS payments (payment_id SERIAL PRIMARY KEY ,cleaner_id INT,task_id INT REFERENCES tasks(task_id), amount DECIMAL(10, 2) NOT NULL, payment_date DATE NOT NULL);",
 };
 
 // Object containing SQL scripts for inserting data into tables

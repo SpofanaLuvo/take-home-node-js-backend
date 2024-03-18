@@ -22,6 +22,8 @@ const protect = asyncHandler(async (req, res, next) => {
                 selectFrom.userWithId(decoded.userId)
             );
 
+            
+
             delete user.rows[0].password;
             req.user = user.rows[0];
 

@@ -72,6 +72,7 @@ const getCompletedTasks = asyncHandler(async (req, res) => {
 //@access = Private
 const getTotals = asyncHandler(async (req, res) => {
     const { cleaner_id, date, aggregationType } = req.body;
+
     if (!cleaner_id || !date || !aggregationType) {
         res.status(400);
         throw new Error("Please add all fields");
@@ -79,7 +80,7 @@ const getTotals = asyncHandler(async (req, res) => {
 
     let query, totalIncome;
 
-    if (aggregationType === "month") {
+    if (aggregationType !== "month") {
         query = selectFrom.paymentsForDay(cleaner_id, date);
     } else {
         query = selectFrom.paymentsForMonth(cleaner_id, date);
@@ -91,7 +92,7 @@ const getTotals = asyncHandler(async (req, res) => {
         console.log(error);
     }
 
-    res.status(200).json(totalIncome);
+    res.status(200).json(totalIncome.rows[0]);
 });
 
 module.exports = {

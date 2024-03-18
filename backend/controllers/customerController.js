@@ -20,14 +20,10 @@ const getAvailableCleaners = asyncHandler(async (req, res) => {
 //@access = Public
 const makePayment = asyncHandler(async (req, res) => {
     const { cleaner_id, task_id, amount } = req.body;
-    const user = await pool.query(selectFrom.cleanerWithId(cleaner_id));
-    if (!user) {
+    const cleaner = await pool.query(selectFrom.cleanerWithId(cleaner_id));
+    if (!cleaner) {
         throw new Error("User does not exist");
     }
-
-    console.log(cleaner_id);
-    console.log(task_id);
-    console.log(amount);
     new Date().toDateString();
     console.log(new Date().toDateString());
     const payment_date = new Date().toDateString();
@@ -52,11 +48,11 @@ const rateCleaner = asyncHandler(async (req, res) => {
 
     try {
         await pool.query(insertInto.ratings(cleaner_id, rating));
+        res.json({ message: `Rating made to cleaner ${cleaner_id}` });
     } catch (error) {
         console.log(error);
+        res.status(500).json(error.error);
     }
-
-    res.json({ message: `Rating made to cleaner ${cleaner_id}` });
 });
 
 //@desc View Ratings
@@ -65,11 +61,12 @@ const rateCleaner = asyncHandler(async (req, res) => {
 const viewAllRatings = asyncHandler(async (req, res) => {
     try {
         ratings = await pool.query(selectFrom.ratings);
+        res.status(200).json(ratings.rows);
     } catch (error) {
-        console.log(error);
+        console.log(error.error);
     }
 
-    res.status(200).json(ratings.rows);
+    
 });
 
 const viewCleanerRatings = asyncHandler(async (req, res) => {
