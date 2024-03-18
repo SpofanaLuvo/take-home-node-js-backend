@@ -1,5 +1,7 @@
 const jwt = require("jsonwebtoken");
 const asyncHandler = require("express-async-handler");
+const pool = require("../config/dbConnection");
+const { insertInto, selectFrom } = require("../helpers/helperData");
 
 const protect = asyncHandler(async (req, res, next) => {
     let token;
@@ -11,7 +13,6 @@ const protect = asyncHandler(async (req, res, next) => {
         try {
             // get token from header
             token = req.headers.authorization.split(" ")[1];
-            console.log(req.headers);
             //verify token
             const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
@@ -20,8 +21,10 @@ const protect = asyncHandler(async (req, res, next) => {
             const user = await pool.query(
                 selectFrom.userWithId(decoded.userId)
             );
+
             delete user.rows[0].password;
             req.user = user.rows[0];
+
             next();
         } catch (error) {
             console.log(error);

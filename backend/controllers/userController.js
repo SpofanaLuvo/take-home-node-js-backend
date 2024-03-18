@@ -11,7 +11,7 @@ const registerUser = asyncHandler(async (req, res) => {
     const { name, email, password, role } = req.body;
     if (!name || !email || !password || !role) {
         res.status(400);
-        throw new Error("Please add all  fields");
+        throw new Error("Please add all fields");
     }
 
     const userExists = await pool.query(selectFrom.userWithEmail(email));
@@ -20,28 +20,29 @@ const registerUser = asyncHandler(async (req, res) => {
         throw new Error("User already exists");
     }
 
-    //hash password
+    // Hash password
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    //create user
-    const user = await pool.query(
+    // Create user
+    let user = await pool.query(
         insertInto.users(name, email, hashedPassword, role)
     );
 
     if (user) {
+        user = await pool.query(selectFrom.userWithEmail(email));
+        user = user.rows[0];
+        const token = generateToken(res, user.user_id); // Capture the generated token
         res.status(201).json({
-            _id: user._id,
+            id: user.user_id,
             name: user.name,
             email: user.email,
-            token: generateToken(user.id),
+            token: token, // Include the token in the response
         });
     } else {
         res.status(400);
         throw new Error("Invalid user data");
     }
-
-    res.json({ message: "Register User" });
 });
 
 //@desc = Authenticate a user
@@ -56,12 +57,14 @@ const loginUser = asyncHandler(async (req, res) => {
     }
 
     // check for user email
-    const user = await pool.query(selectFrom.userWithEmail(email));
+    let user = await pool.query(selectFrom.userWithEmail(email));
+    user = user.rows[0];
 
-    if (user && (await bcrypt.compare(password, user.rows[0].password))) {
-        const token = generateToken(res, user.id); // Capture the token here
+    if (user && (await bcrypt.compare(password, user.password))) {
+        const token = generateToken(res, user.user_id);
+
         res.status(201).json({
-            _id: user._id,
+            id: user.user_id,
             name: user.name,
             email: user.email,
             token: token,
@@ -71,7 +74,6 @@ const loginUser = asyncHandler(async (req, res) => {
         throw new Error("Invalid credentials");
     }
 });
-
 
 //@desc = Get user data
 //@route = POST /api/users/me

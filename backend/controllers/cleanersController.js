@@ -2,45 +2,69 @@ const asyncHandler = require("express-async-handler");
 const { insertInto, selectFrom } = require("../helpers/helperData");
 const pool = require("../config/dbConnection");
 
-//@desc = Get Available cleaners
-//@route = GET /api/cleaners
+//@desc = Get all tasks
+//@route = GET /api/tasks/
 //@access = Public
-const getAvailableCleaners = asyncHandler(async (req, res) => {
+const getAllTasks = asyncHandler(async (req, res) => {
+    let allTasks;
+
     try {
-        cleaners = await pool.query(selectFrom.cleaners);
+        allTasks = await pool.query(selectFrom.tasks);
     } catch (error) {
         console.log(error);
     }
 
-    res.status(200).json(cleaners.rows);
+    allTasks.rows.length > 0
+        ? res.status(200).json(allTasks.rows)
+        : res
+              .status(200)
+              .json("There are currently no tasks");
 });
 
 //@desc = Get pending tasks
 //@route = GET /api/tasks/pending
 //@access = Private
 const getPendingTasks = asyncHandler(async (req, res) => {
+    let pendingTasks;
+
     try {
         tasks = await pool.query(selectFrom.tasks);
-        pendingTasks = tasks.filter((task) => task.status === "pending");
+        pendingTasks = tasks.rows.filter(
+            (task) =>
+                task.status === "pending" &&
+                task.assigned_to === req.user.user_id
+        );
     } catch (error) {
         console.log(error);
     }
 
-    res.status(200).json(pendingTasks.rows);
+    pendingTasks.length > 0
+        ? res.status(200).json(pendingTasks)
+        : res
+              .status(200)
+              .json("There are no tasks assigned to the current user");
 });
 
 //@desc = Get completed tasks
 //@route = GET /api/tasks/completed
 //@access = Private
 const getCompletedTasks = asyncHandler(async (req, res) => {
+    let completedTasks;
+
     try {
         tasks = await pool.query(selectFrom.tasks);
-        completedTasks = tasks.filter((task) => task.status === "completed");
+        completedTasks = tasks.rows.filter(
+            (task) => task.status === "completed"
+        );
     } catch (error) {
         console.log(error);
     }
 
-    res.status(200).json(completedTasks.rows);
+    completedTasks.length > 0
+        ? res.status(200).json(completedTasks)
+        : res
+              .status(200)
+              .json("There are no completed tasks under the current user");
 });
 
 //@desc = Get total Income
@@ -76,34 +100,10 @@ const getTotals = asyncHandler(async (req, res) => {
     res.status(200).json(totalIncome);
 });
 
-//@desc View Ratings
-//@route = GET /api/ratings/
-//@access = Public
-const viewAllRatings = asyncHandler(async (req, res) => {
-    try {
-        ratings = await pool.query(selectFrom.ratings);
-    } catch (error) {
-        console.log(error);
-    }
-
-    res.status(200).json(ratings.rows);
-});
-
-const viewCleanerRatings = asyncHandler(async (req, res) => {
-    try {
-        ratings = await pool.query(selectFrom.ratingWithId(req.params.id));
-    } catch (error) {
-        console.log(error);
-    }
-
-    res.status(200).json(ratings.rows);
-});
 
 module.exports = {
-    getAvailableCleaners,
     getPendingTasks,
     getCompletedTasks,
     getTotals,
-    viewAllRatings,
-    viewCleanerRatings,
+    getAllTasks,
 };
