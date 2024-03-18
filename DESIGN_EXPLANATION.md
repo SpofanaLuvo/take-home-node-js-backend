@@ -2,13 +2,15 @@
 
 ## 1 - First things first, run "git pull" to ensure that you have the latest version of the repository.
 
-## 2 - Ensure your docker-daemon is running, then on the root of the project, run the following command: "docker-compose up" to start up your docker container and create a potgress database image.
+## 2 - Add your environmental variables to the ,env file.
 
-## 3 - npm install;
+## 3 - Ensure your docker-daemon is running, then on the root of the project, run the following command: "docker-compose up" to start up your docker container and create a potgress database image.
 
-## 4 - seed the database with the sampla data by running "npm run seed";
+## 4 - npm install;
 
-## 5 - finally, run "npm run dev" to start up your development server.
+## 5 - seed the database with the sampla data by running "npm run seed";
+
+## 6 - finally, run "npm run dev" to start up your development server.
 
 # Project Overview
 
@@ -48,3 +50,4 @@ The chosen technology stack and design decisions aim to balance performance, sec
 ## Test Notes
 
 I have attached a postman collection of request I made to test the endpoints. You could make use of it to save yourself time.
+ - cleaners_hub.postman_collection.json is the collection file for use
