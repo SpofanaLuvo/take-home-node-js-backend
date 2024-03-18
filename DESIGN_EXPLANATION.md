@@ -1,14 +1,14 @@
 # Setup Instructions.
 
-1 - First things first, run "git pull" to ensure that you have the latest version of the repository.
+## 1 - First things first, run "git pull" to ensure that you have the latest version of the repository.
 
-2 - Ensure your docker-daemon is running, then on the root of the project, run the following command: "docker-compose up" to start up your docker container and create a potgress database image.
+## 2 - Ensure your docker-daemon is running, then on the root of the project, run the following command: "docker-compose up" to start up your docker container and create a potgress database image.
 
-3 - npm install;
+## 3 - npm install;
 
-4 - seed the database with the sampla data by running "npm run seed";
+## 4 - seed the database with the sampla data by running "npm run seed";
 
-5 - finally, run "npm run dev" to start up your development server.
+## 5 - finally, run "npm run dev" to start up your development server.
 
 # Project Overview
 

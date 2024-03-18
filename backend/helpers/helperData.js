@@ -1,44 +1,19 @@
-const { Pool } = require("pg");
-
-var pool = new Pool({
-    user: "postgres",
-    host: "db",
-    password: "root",
-});
-
-async function populateTables() {
-    try {
-        for (const table of Object.values(insertInto)) {
-            await pool.query(table);
-        }
-    } catch (error) {
-        console.log(error);
-    }
-}
-
-async function createTables() {
-    try {
-        for (const table of Object.values(createTableScripts)) {
-            await pool.query(table);
-        }
-    } catch (error) {
-        console.log(error);
-    }
-}
-
+const pool = require("../config/dbConnection");
 
 const insertInto = {
     users: (name, email, password, role) => {
         return `INSERT INTO users (name, email, password, role) VALUES ('${name}','${email}', '${password}', '${role}')`;
     },
-    cleaners: (email, password, role) => {
-        return `INSERT INTO users (email, password, role) VALUES ('${email}', '${password}', '${role}) `;
+    cleaners: () => {
+        return `INSERT INTO cleaners (email, password, role) VALUES ('${email}', '${password}', '${role}') `;
     },
-    tasks: "INSERT INTO tasks (description, hourly_rate, status) VALUES ('Task 1', 100, 'pending'), ('Task 2', 150, 'pending'), ('Task 3', 50, 'completed'), ('Task 4', 300, 'pending'), ('Task 5', 250, 'completed');",
+    tasks: (description, status, assigned_to) => {
+        `INSERT INTO tasks (description, status, assigned_to) VALUES ('${description}', '${status}', '${assigned_to}');`;
+    },
     ratings: (cleaner_id, rating) => {
         return `INSERT INTO ratings (cleaner_id, rating) VALUES ('${cleaner_id}', '${rating}');`;
     },
-    payments: (cleaner_id,task_id, amount, payment_date) => {
+    payments: (cleaner_id, task_id, amount, payment_date) => {
         `INSERT INTO Payments (cleaner_id,task_id, amount, payment_date) VALUES ('${cleaner_id}','${task_id}','${amount}','${payment_date}');`;
     },
 };

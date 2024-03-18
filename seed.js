@@ -1,4 +1,8 @@
-const { createTables, populateTables } = require("seed.js");
+const { createTables, populateTables, dropTables } = require("./sampleData.js");
 
-createTables();
-populateTables();
+(async function getStarted() {
+    await dropTables();
+    await createTables();
+    await populateTables();
+    console.log("Lets go!");
+})();

@@ -4,7 +4,7 @@
     "main": "./backend/server",
     "license": "MIT",
     "scripts": {
-        "seed": "node sampleData.js",
+        "seed": "node seed.js",
         "dev": "nodemon backend/server.js"
     },
     "dependencies": {

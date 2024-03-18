@@ -7,8 +7,8 @@ async function createTables() {
         // Loop through each table creation script and execute it
         for (const table of Object.values(createTableScripts)) {
             await pool.query(table);
-            console.log("Tables created!");
         }
+        console.log("Tables created!");
     } catch (error) {
         // Log any errors that occur during table creation
         console.log(error);
@@ -21,31 +21,53 @@ async function populateTables() {
         // Loop through each data insertion script and execute it
         for (const table of Object.values(insertInto)) {
             await pool.query(table);
-            console.log("Data inserted!");
         }
+        console.log(`Tables populated`);
     } catch (error) {
         console.log(error);
     }
 }
 
+async function dropTables() {
+    try {
+        // Loop through each data insertion script and execute it
+        for (const table of Object.values(dropTableScripts)) {
+            await pool.query(table);
+        }
+        console.log(`Tables dropped!`);
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+const dropTableScripts = {
+    payments: "DROP TABLE IF EXISTS payments;",
+    ratings: "DROP TABLE IF EXISTS ratings;",
+    tasks: "DROP TABLE IF EXISTS tasks;",
+    cleaners: "DROP TABLE IF EXISTS cleaners;",
+    users: "DROP TABLE IF EXISTS users;",
+};
+
 // Object containing SQL scripts for creating tables
 const createTableScripts = {
     users: "CREATE TABLE IF NOT EXISTS users (user_id SERIAL PRIMARY KEY,name VARCHAR(255) NOT NULL,email VARCHAR(255) NOT NULL, password VARCHAR(255) NOT NULL, role VARCHAR(20) DEFAULT 'customer' NOT NULL)",
     cleaners:
-        "CREATE TABLE IF NOT EXISTS cleaners (cleaner_id SERIAL PRIMARY KEY,user_id INT REFERENCES users(user_id),name VARCHAR(255) NOT NULL,rating NUMERIC(3, 2) DEFAULT 0, FOREIGN KEY (user_id) REFERENCES users(user_id));",
-    tasks: "CREATE TABLE IF NOT EXISTS tasks (task_id SERIAL PRIMARY KEY,description TEXT NOT NULL, status VARCHAR(20) DEFAULT 'pending' NOT NULL, assigned_to INT REFERENCES cleaners(cleaner_id));",
+        "CREATE TABLE IF NOT EXISTS cleaners (cleaner_id SERIAL PRIMARY KEY,name VARCHAR(255) NOT NULL, email VARCHAR(255) NOT NULL)",
+    tasks: "CREATE TABLE IF NOT EXISTS tasks (task_id SERIAL PRIMARY KEY,description TEXT NOT NULL, status VARCHAR(20) DEFAULT 'pending' NOT NULL)",
     ratings:
-        "CREATE TABLE IF NOT EXISTS ratings (rating_id SERIAL PRIMARY KEY ,cleaner_id INT REFERENCES cleaners(cleaner_id), rating INT NOT NULL);",
+        "CREATE TABLE IF NOT EXISTS ratings (rating_id SERIAL PRIMARY KEY ,cleaner_id INT UNIQUE REFERENCES cleaners(cleaner_id), rating INT NOT NULL);",
     payments:
-        "CREATE TABLE IF NOT EXISTS payments (payment_id SERIAL PRIMARY KEY ,cleaner_id INT REFERENCES cleaners(cleaner_id),task_id INT REFERENCES tasks(task_id), amount DECIMAL(10, 2) NOT NULL, payment_date DATE NOT NULL);",
+        "CREATE TABLE IF NOT EXISTS payments (payment_id SERIAL PRIMARY KEY ,cleaner_id INT UNIQUE REFERENCES cleaners(cleaner_id),task_id INT REFERENCES tasks(task_id), amount DECIMAL(10, 2) NOT NULL, payment_date DATE NOT NULL);",
 };
 
 // Object containing SQL scripts for inserting data into tables
 const insertInto = {
     users: "INSERT INTO users (name, email, password, role) VALUES ('user1', 'user1@example.com', 'password1', 'customer'), ('user2', 'user2@example.com', 'password2', 'customer'), ('user3', 'user3@example.com', 'password3', 'customer'), ('user4', 'user4@example.com', 'password4', 'customer'), ('cleaner1', 'cleaner1@example.com', 'password1', 'cleaner'), ('cleaner2', 'cleaner2@example.com', 'password2', 'cleaner'), ('cleaner3', 'cleaner3@example.com', 'password3', 'cleaner'), ('cleaner4', 'cleaner4@example.com', 'password4', 'cleaner'), ('cleaner5', 'cleaner5@example.com', 'password5', 'cleaner'), ('cleaner6', 'cleaner6@example.com', 'password6', 'cleaner');",
     cleaners:
-        "INSERT INTO cleaners (user_id, name) SELECT user_id, name FROM users WHERE role = 'cleaner';",
-    tasks: "INSERT INTO tasks (description, status, assigned_to) VALUES ('Clean kitchen', 'pending', 1), ('Mop floors', 'pending', 2), ('Dust furniture', 'pending', 3), ('Vacuum carpets', 'pending', 4), ('Clean bathrooms', 'pending', 5), ('Wash windows', 'pending', 6), ('Organize closets', 'pending', 7), ('Dishes', 'pending', 8), ('Laundry', 'pending', 9), ('Sweep porch', 'pending', 10);",
+        "INSERT INTO cleaners (name, email) SELECT name, email FROM users WHERE role = 'cleaner';",
+
+    tasks: "INSERT INTO tasks (description) VALUES ('Clean kitchen'), ('Mop floors'), ('Dust furniture'), ('Vacuum carpets'), ('Clean bathrooms'),   ('Wash windows');",
+
     ratings:
         "INSERT INTO ratings (cleaner_id, rating) VALUES (1, 4), (2, 5), (3, 3), (4, 4), (5, 4), (6, 5);",
     payments:
@@ -53,4 +75,4 @@ const insertInto = {
 };
 
 // Calling functions to create tables and populate data into them
-module.exports = { createTables, populateTables };
+module.exports = { createTables, populateTables, dropTables };
