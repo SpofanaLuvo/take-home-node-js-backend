@@ -1,9 +1,20 @@
 {
-  "name": "take-home-nodejs-example",
-  "version": "1.0.0",
-  "main": "index.js",
-  "license": "MIT",
-  "dependencies": {
-    "express": "^4.17.1"
-  }
+    "name": "take-home-nodejs-example",
+    "version": "1.0.0",
+    "main": "./backend/server",
+    "license": "MIT",
+    "scripts": {
+        "seed": "node sampleData.js",
+        "dev": "nodemon backend/server.js"
+    },
+    "dependencies": {
+        "bcryptjs": "^2.4.3",
+        "concurrently": "^8.2.2",
+        "dotenv": "^16.4.5",
+        "express": "^4.17.1",
+        "express-async-handler": "^1.2.0",
+        "jsonwebtoken": "^9.0.2",
+        "nodemon": "^3.1.0",
+        "pg": "^8.11.3"
+    }
 }
