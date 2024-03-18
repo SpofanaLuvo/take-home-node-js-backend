@@ -19,25 +19,29 @@ const getAvailableCleaners = asyncHandler(async (req, res) => {
 //@route = POST /api/payment/:id
 //@access = Public
 const makePayment = asyncHandler(async (req, res) => {
-    if (!req.body.text) {
-        res.status(400);
-        throw new Error("Please add a text field");
-    }
-
-    const user = await pool.query(selectFrom.userWithId(request.params.id));
+    const { cleaner_id, task_id, amount } = req.body;
+    const user = await pool.query(selectFrom.cleanerWithId(cleaner_id));
     if (!user) {
         throw new Error("User does not exist");
     }
 
-    const { cleaner_id, amount, payment_date } = req.body;
-
+    console.log(cleaner_id);
+    console.log(task_id);
+    console.log(amount);
+    new Date().toDateString();
+    console.log(new Date().toDateString());
+    const payment_date = new Date().toDateString();
     try {
-        await pool.query(insertInto.payments(cleaner_id, amount, payment_date));
+        await pool.query(
+            insertInto.payments(cleaner_id, task_id, amount, payment_date)
+        );
+        res.json({ message: `Payment made to cleaner ${cleaner_id}` });
     } catch (error) {
         console.log(error);
+        res.status(500).json({
+            error: "An error occurred while making the payment.",
+        });
     }
-
-    res.json({ message: `Payment made to cleaner ${cleaner_id}` });
 });
 
 //@desc Rate a cleaner
@@ -78,11 +82,10 @@ const viewCleanerRatings = asyncHandler(async (req, res) => {
     res.status(200).json(ratings.rows);
 });
 
-
 module.exports = {
     getAvailableCleaners,
     makePayment,
     rateCleaner,
     viewAllRatings,
-    viewCleanerRatings
+    viewCleanerRatings,
 };

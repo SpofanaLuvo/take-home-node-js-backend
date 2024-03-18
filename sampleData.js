@@ -37,7 +37,7 @@ const createTableScripts = {
     ratings:
         "CREATE TABLE IF NOT EXISTS ratings (rating_id SERIAL PRIMARY KEY ,cleaner_id INT REFERENCES cleaners(cleaner_id), rating INT NOT NULL);",
     payments:
-        "CREATE TABLE IF NOT EXISTS payments (payment_id SERIAL PRIMARY KEY ,user_id INT REFERENCES users(user_id),cleaner_id INT REFERENCES cleaners(cleaner_id),task_id INT REFERENCES tasks(task_id), amount DECIMAL(10, 2) NOT NULL, payment_date DATE NOT NULL);",
+        "CREATE TABLE IF NOT EXISTS payments (payment_id SERIAL PRIMARY KEY ,cleaner_id INT REFERENCES cleaners(cleaner_id),task_id INT REFERENCES tasks(task_id), amount DECIMAL(10, 2) NOT NULL, payment_date DATE NOT NULL);",
 };
 
 // Object containing SQL scripts for inserting data into tables
@@ -49,7 +49,7 @@ const insertInto = {
     ratings:
         "INSERT INTO ratings (cleaner_id, rating) VALUES (1, 4), (2, 5), (3, 3), (4, 4), (5, 4), (6, 5);",
     payments:
-        "INSERT INTO payments (user_id, cleaner_id, task_id, amount, payment_date) VALUES (1, 1, 1, 50.00, '2024-03-18'), (2, 2, 2, 60.00, '2024-03-18'), (3, 3, 3, 70.00, '2024-03-18'), (4, 4, 4, 80.00, '2024-03-18'), (5, 5, 5, 90.00, '2024-03-18'), (6, 6, 6, 100.00, '2024-03-18');",
+        "INSERT INTO payments (cleaner_id, task_id, amount, payment_date) VALUES (1, 1, 50.00, '2024-03-18'), (2, 2, 60.00, '2024-03-18'), (3, 3, 70.00, '2024-03-18'), (4, 4, 80.00, '2024-03-18'), (5, 5, 90.00, '2024-03-18'), (6, 6, 100.00, '2024-03-18');",
 };
 
 // Calling functions to create tables and populate data into them

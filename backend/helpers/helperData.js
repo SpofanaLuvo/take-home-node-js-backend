@@ -26,16 +26,6 @@ async function createTables() {
     }
 }
 
-const createTableScripts = {
-    users: "CREATE TABLE IF NOT EXISTS users (id SERIAL PRIMARY KEY,name VARCHAR(255) NOT NULL, email VARCHAR(255) NOT NULL, password VARCHAR(255) NOT NULL, role ENUM('customer','cleaner') NOT NULL)",
-    cleaners:
-        "CREATE TABLE IF NOT EXISTS cleaners (id SERIAL PRIMARY KEY,name VARCHAR(255) NOT NULL, email VARCHAR(255) NOT NULL, FOREIGN KEY (id) REFERENCES Users(id));",
-    tasks: "CREATE TABLE IF NOT EXISTS Tasks (id SERIAL PRIMARY KEY AUTO_INCREMENT,description TEXT NOT NULL, hourly_rate DECIMAL(10, 2) NOT NULL, status ENUM('pending', 'completed') NOT NULL, FOREIGN KEY (assigned_to) REFERENCES Cleaners(id));",
-    ratings:
-        "CREATE TABLE IF NOT EXISTS ratings (id SERIAL PRIMARY KEY AUTO_INCREMENT,cleaner_id INT, rating INT NOT NULL, FOREIGN KEY (cleaner_id) REFERENCES Cleaners(id));",
-    payments:
-        "CREATE TABLE IF NOT EXISTS payments (id SERIAL PRIMARY KEY AUTO_INCREMENT,task_id INT, amount DECIMAL(10, 2) NOT NULL, payment_date DATE NOT NULL, FOREIGN KEY (task_id) REFERENCES Tasks(id));",
-};
 
 const insertInto = {
     users: (name, email, password, role) => {
@@ -48,8 +38,8 @@ const insertInto = {
     ratings: (cleaner_id, rating) => {
         return `INSERT INTO ratings (cleaner_id, rating) VALUES ('${cleaner_id}', '${rating}');`;
     },
-    payments: (task_id, amount, payment_date) => {
-        `INSERT INTO Payments (task_id, amount, payment_date) VALUES ('${cleaner_id}','${amount}','${payment_date}');`;
+    payments: (cleaner_id,task_id, amount, payment_date) => {
+        `INSERT INTO Payments (cleaner_id,task_id, amount, payment_date) VALUES ('${cleaner_id}','${task_id}','${amount}','${payment_date}');`;
     },
 };
 
@@ -62,6 +52,9 @@ const selectFrom = {
     },
     users: "SELECT * FROM users;",
     cleaners: "SELECT * FROM cleaners;",
+    cleanerWithId: (cleaner_id) => {
+        return `SELECT * FROM users WHERE user_id ='${cleaner_id}';`;
+    },
     tasks: "SELECT * FROM tasks;",
     ratingWithId: (cleaner_id) => {
         return `SELECT * FROM ratings WHERE cleaner_id='${cleaner_id}';`;

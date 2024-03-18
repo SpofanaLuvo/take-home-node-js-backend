@@ -16,9 +16,7 @@ const getAllTasks = asyncHandler(async (req, res) => {
 
     allTasks.rows.length > 0
         ? res.status(200).json(allTasks.rows)
-        : res
-              .status(200)
-              .json("There are currently no tasks");
+        : res.status(200).json("There are currently no tasks");
 });
 
 //@desc = Get pending tasks
@@ -54,7 +52,9 @@ const getCompletedTasks = asyncHandler(async (req, res) => {
     try {
         tasks = await pool.query(selectFrom.tasks);
         completedTasks = tasks.rows.filter(
-            (task) => task.status === "completed"
+            (task) =>
+                task.status === "completed" &&
+                task.assigned_to === req.user.user_id
         );
     } catch (error) {
         console.log(error);
@@ -71,19 +71,13 @@ const getCompletedTasks = asyncHandler(async (req, res) => {
 //@route = GET /api/totals/
 //@access = Private
 const getTotals = asyncHandler(async (req, res) => {
-    const { name, email, password, role } = req.body;
-    if (!name || !email || !password || !role) {
-        res.status(400);
-        throw new Error("Please add all  fields");
-    }
-
-    if (!req.body.text) {
-        res.status(400);
-        throw new Error("Please add a text field");
-    }
-
     const { cleaner_id, date, aggregationType } = req.body;
-    let query;
+    if (!cleaner_id || !date || !aggregationType) {
+        res.status(400);
+        throw new Error("Please add all fields");
+    }
+
+    let query, totalIncome;
 
     if (aggregationType === "month") {
         query = selectFrom.paymentsForDay(cleaner_id, date);
@@ -92,14 +86,13 @@ const getTotals = asyncHandler(async (req, res) => {
     }
 
     try {
-        const totalIncome = await pool.query(query);
+        totalIncome = await pool.query(query);
     } catch (error) {
         console.log(error);
     }
 
     res.status(200).json(totalIncome);
 });
-
 
 module.exports = {
     getPendingTasks,
